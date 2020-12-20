@@ -21,7 +21,7 @@ $(call inherit-product-if-exists, vendor/xiaomi/lmi/lmi-vendor.mk)
 PRODUCT_BUILD_SUPER_PARTITION := false
 BOARD_BUILD_PRODUCT_IMAGE := true
 PRODUCT_SHIPPING_API_LEVEL := 29
-PRODUCT_TARGET_VNDK_VERSION := 30
+PRODUCT_TARGET_VNDK_VERSION := 29
 PRODUCT_USE_DYNAMIC_PARTITIONS := true
 PRODUCT_COMPATIBLE_PROPERTY_OVERRIDE := true
 
@@ -31,7 +31,7 @@ PRODUCT_AAPT_PREF_CONFIG := xxhdpi
 
 # ANT+
 PRODUCT_PACKAGES += \
-    AntHalService \
+    AntHalService-Soong \
     antradio_app \
     libantradio
 
@@ -46,7 +46,11 @@ PRODUCT_COPY_FILES += \
 
 # Bluetooth
 PRODUCT_PACKAGES += \
-    BluetoothQti
+    BluetoothQti \
+    com.qualcomm.qti.bluetooth_audio@1.0 \
+    vendor.qti.hardware.bluetooth_audio@2.0 \
+    vendor.qti.hardware.btconfigstore@1.0 \
+    vendor.qti.hardware.btconfigstore@2.0
 
 # Camera
 PRODUCT_PACKAGES += \
@@ -101,13 +105,16 @@ PRODUCT_PACKAGES += \
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/privapp-permissions-hotword.xml:$(TARGET_COPY_OUT_SYSTEM)/etc/permissions/privapp-permissions-hotword.xml
 
-# Hostapd
-PRODUCT_COPY_FILES += \
-    $(LOCAL_PATH)/rootdir/bin/hostapd:$(TARGET_COPY_OUT_PRODUCT)/vendor_overlay/$(PRODUCT_TARGET_VNDK_VERSION)/bin/hw/hostapd
-
 # Input
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/keylayout/gpio-keys.kl:system/usr/keylayout/gpio-keys.kl
+
+# IFAA manager
+PRODUCT_PACKAGES += \
+    org.ifaa.android.manager
+
+PRODUCT_BOOT_JARS += \
+    org.ifaa.android.manager
 
 # Init scripts
 PRODUCT_PACKAGES += \
@@ -144,7 +151,9 @@ DEVICE_PACKAGE_OVERLAYS += \
 
 # overlay-remove
 PRODUCT_PACKAGES += \
-    FrameworksResTarget
+    DevicesOverlay \
+    FrameworksResTarget \
+    DevicesAndroidOverlay
 
 # Permissions
 PRODUCT_COPY_FILES += \
@@ -183,6 +192,14 @@ PRODUCT_BUILD_SUPER_PARTITION := false
 PRODUCT_USE_DYNAMIC_PARTITIONS := true
 BOARD_BUILD_PRODUCT_IMAGE := true
 
+# TetherOffload
+PRODUCT_PACKAGES += \
+    android.hardware.tetheroffload.config@1.0
+
 # Thermal
 PRODUCT_PACKAGES += \
     android.hardware.thermal@2.0
+
+# WiFi
+PRODUCT_PACKAGES += \
+    WifiResCommon
